@@ -414,7 +414,7 @@ const Home = () => {
                   </div>
                   <div>
                     <p className="font-medium text-navy-900">Location</p>
-                    <p className="text-gray-600">Baabda, Lebanon</p>
+                    <p className="text-gray-600" href='https://maps.app.goo.gl/XdLoNTwDKKMnSSb59'> Ghazir, Lebanon</p>
                   </div>
                 </div>
               </div>
