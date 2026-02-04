@@ -414,7 +414,8 @@ const Home = () => {
                   </div>
                   <div>
                     <p className="font-medium text-navy-900">Location</p>
-                    <a className="text-gray-600" href='https://maps.app.goo.gl/XdLoNTwDKKMnSSb59'> Ghazir, Lebanon</p>
+                      <a href="https://maps.app.goo.gl/XdLoNTwDKKMnSSb59" className="text-gray-600 hover:text-teal-600">Ghazir, Lebanon</a>
+                    
                   </div>
                 </div>
               </div>
