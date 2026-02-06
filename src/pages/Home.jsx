@@ -404,7 +404,7 @@ const Home = () => {
                   </div>
                   <div>
                     <p className="font-medium text-navy-900">Email</p>
-                    <a href="mailto:info@carpetcure.com" className="text-gray-600 hover:text-teal-600">info@carpetcure.com</a>
+                    <a href="mailto:info@carpetcurecleaning.com" className="text-gray-600 hover:text-teal-600">info@carpetcurecleaning.com</a>
                   </div>
                 </div>
 
