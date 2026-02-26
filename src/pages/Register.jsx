@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Shield, Mail, Lock, User, Phone, MapPin, ArrowRight, Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { register } from '../services/api';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -15,17 +20,53 @@ const Register = () => {
     acceptTerms: false
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    
+    // Validation
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      setError('Passwords do not match!');
       return;
     }
     if (!formData.acceptTerms) {
-      alert('Please accept the terms and conditions');
+      setError('Please accept the terms and conditions');
       return;
     }
-    console.log('Registration attempt:', formData);
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
+    setLoading(true);
+    console.log('🚀 Starting registration...', formData);
+
+    try {
+      // Prepare data for API (match backend expectations)
+      const userData = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        password: formData.password,
+      };
+
+      console.log('📤 Sending to API:', userData);
+      
+      // Call register API
+      const response = await register(userData);
+      
+      console.log('✅ Registration successful!', response);
+      
+      // Redirect to dashboard
+      navigate('/dashboard');
+      
+    } catch (err) {
+      console.error('❌ Registration failed:', err);
+      setError(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -34,6 +75,7 @@ const Register = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    setError(''); // Clear error when user types
   };
 
   return (
@@ -77,6 +119,13 @@ const Register = () => {
             <h2 className="text-3xl font-bold text-navy-900 mb-2">Create Account</h2>
             <p className="text-gray-600">Join Carpet Cure today</p>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Full Name */}
@@ -185,6 +234,7 @@ const Register = () => {
                     className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
                     placeholder="••••••••"
                     required
+                    minLength={6}
                   />
                   <button
                     type="button"
@@ -198,6 +248,7 @@ const Register = () => {
                     )}
                   </button>
                 </div>
+                <p className="mt-1 text-xs text-gray-500">At least 6 characters</p>
               </div>
 
               {/* Confirm Password */}
@@ -255,10 +306,23 @@ const Register = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white py-3 px-4 rounded-lg hover:from-teal-600 hover:to-teal-700 transition duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg shadow-teal-500/30"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white py-3 px-4 rounded-lg hover:from-teal-600 hover:to-teal-700 transition duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg shadow-teal-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span>Create Account</span>
-              <ArrowRight className="w-5 h-5" />
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Creating Account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create Account</span>
+                  <ArrowRight className="w-5 h-5" />
+                </>
+              )}
             </button>
 
             {/* Divider */}

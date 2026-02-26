@@ -5,9 +5,10 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Pricing from './pages/Pricing';
 import BookPickup from './pages/BookPickup';
+import BookingConfirmation from './pages/BookingConfirmation';
 import ClientDashboard from './pages/ClientDashboard';
 import AdminDashboard from './pages/AdminDashboard';
-
+import SecretaryManagement from './pages/SecretaryManagement';
 function App() {
   return (
     <Router>
@@ -17,8 +18,11 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/book" element={<BookPickup />} />
+        <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path="/dashboard" element={<ClientDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/secretaries" element={<SecretaryManagement />} />
+
       </Routes>
     </Router>
   );
